@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Entry Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .data-row {
+      display: flex;
+      flex-direction: column;
+      margin: 10px;
+      padding: 15px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .data-row label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .data-row input,
+    .data-row textarea {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      width: 100%;
+      resize: vertical;
+    }
+
+    #saveData {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: #ffffff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    /* Style for the Download JSON link */
+    .download-link {
+      display: block;
+      margin-top: 10px;
+      color: #3498db;
+      text-decoration: none;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Data Entry Form</h1>
+
+  <div class="data-row">
+    <label for="your_name">Your Name:</label>
+    <input type="text" id="your_name">
+  </div>
+
+  <div class="data-row">
+    <label for="character_name">Character Name:</label>
+    <input type="text" id="character_name">
+  </div>
+
+  <div class="data-row">
+    <label for="character_personality">Character Personality:</label>
+    <textarea id="character_personality"></textarea>
+  </div>
+
+  <div class="data-row">
+    <label for="scenario">Scenario:</label>
+    <input type="text" id="scenario">
+  </div>
+
+  <div class="data-row">
+    <label for="message_example">Message Example:</label>
+    <textarea id="message_example"></textarea>
+  </div>
+
+  <button id="saveData">Save Data</button>
+
+  <a id="downloadLink" class="download-link" style="display: none;"></a>
+
+  <script>
+    document.getElementById('saveData').addEventListener('click', function() {
+      const data = {
+        your_name: document.getElementById('your_name').value,
+        char_name: document.getElementById('character_name').value,
+        char_persona: document.getElementById('character_personality').value,
+        world_scenario: document.getElementById('scenario').value,
+        char_greeting: "", // You can add this input if needed
+        example_dialogue: document.getElementById('message_example').value
+      };
+
+      const jsonData = JSON.stringify(data, null, 2);
+
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'user_data.json';
+      a.textContent = 'Download JSON';
+      document.body.appendChild(a);
+    });
+  </script>
+</body>
+</html>

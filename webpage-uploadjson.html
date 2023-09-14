@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload and Edit JSON Data</title>
+  <style>
+    /* ... your CSS styles ... */
+
+    /* Style for the Editable Data area */
+    #editableData {
+      display: none;
+      margin-top: 20px;
+    }
+
+    /* Style for the Editable Data Fields */
+    .editable-row {
+      display: flex;
+      align-items: center;
+      margin: 10px;
+    }
+
+    .editable-row label {
+      flex: 1;
+      font-weight: bold;
+    }
+
+    .editable-row input,
+    .editable-row textarea {
+      flex: 2;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      width: 100%;
+      resize: vertical;
+    }
+
+    #uploadArea {
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      border: 5px solid rgb(192, 57, 43); /* Example RGB color */
+    }
+  </style>
+</head>
+<body>
+  <h1>Upload and Edit JSON Data</h1>
+
+  <div id="uploadArea">
+    <input type="file" id="fileInput">
+    <button id="loadButton">Load JSON</button>
+  </div>
+
+  <div id="editableData">
+    <div class="editable-row">
+      <label for="editYourName">Your Name:</label>
+      <input type="text" id="editYourName">
+    </div>
+
+    <div class="editable-row">
+      <label for="editCharacterName">Character Name:</label>
+      <input type="text" id="editCharacterName">
+    </div>
+
+    <div class="editable-row">
+      <label for="editCharacterPersonality">Character Personality:</label>
+      <textarea id="editCharacterPersonality"></textarea>
+    </div>
+
+    <div class="editable-row">
+      <label for="editScenario">Scenario:</label>
+      <input type="text" id="editScenario">
+    </div>
+
+    <div class="editable-row">
+      <label for="editMessageExample">Message Example:</label>
+      <textarea id="editMessageExample"></textarea>
+    </div>
+  </div>
+
+  <!-- Replace the Save Edited Data button with a Download Edited JSON button -->
+  <button id="downloadEditedData" style="display: none;">Download Edited JSON</button>
+
+  <script>
+    document.getElementById('loadButton').addEventListener('click', function() {
+      const fileInput = document.getElementById('fileInput');
+      const editableData = document.getElementById('editableData');
+      const downloadButton = document.getElementById('downloadEditedData'); // Updated ID
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+          const jsonData = JSON.parse(event.target.result);
+          editableData.style.display = 'block';
+
+          document.getElementById('editYourName').value = jsonData.name;
+          document.getElementById('editCharacterName').value = jsonData.char_name;
+          document.getElementById('editCharacterPersonality').value = jsonData.char_persona;
+          document.getElementById('editScenario').value = jsonData.world_scenario;
+          document.getElementById('editMessageExample').value = jsonData.example_dialogue;
+
+          downloadButton.style.display = 'block'; // Updated button visibility
+        };
+
+        reader.readAsText(file);
+      }
+    });
+
+    document.getElementById('downloadEditedData').addEventListener('click', function() {
+      const editedData = {
+        name: document.getElementById('editYourName').value,
+        char_name: document.getElementById('editCharacterName').value,
+        char_persona: document.getElementById('editCharacterPersonality').value,
+        world_scenario: document.getElementById('editScenario').value,
+        example_dialogue: document.getElementById('editMessageExample').value
+      };
+
+      const editedJsonData = JSON.stringify(editedData, null, 2);
+
+      const blob = new Blob([editedJsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'edited_user_data.json';
+      a.textContent = 'Download Edited JSON';
+      document.body.appendChild(a);
+    });
+  </script>
+</body>
+</html>
